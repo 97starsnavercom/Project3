@@ -15,5 +15,13 @@
 
         />
 
+    <ImageView
+        android:id="@+id/fire"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+
+        />
+
 
 </android.support.constraint.ConstraintLayout>

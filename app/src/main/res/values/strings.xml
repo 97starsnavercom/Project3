@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Project3</string>
+    <string name="app_name">맛집 어플 Project3</string>
+    <string name="restaurant_name">한성 식당</string>
+    <string name="restaurant_address">서울 성북구 삼선동2가 389</string>
+    <string name="restaurant_phonenumber">02-760-4499</string>
+    <string name="restaurant_operationtime">오전 10시 30분~오후7시</string>
+    <string name="menu_type_jap">일식메뉴</string>
 </resources>
