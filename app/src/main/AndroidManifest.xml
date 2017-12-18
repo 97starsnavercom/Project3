@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -19,6 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyC8eW7ZIfqrpojdw6zVyx3ParUUBTJZsac" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -37,6 +42,7 @@
             android:name=".MenuDetail"
             android:parentActivityName=".RestaurantDetail" />
         <activity android:name=".Restaurant_Map"></activity>
+
     </application>
 
 </manifest>
