@@ -24,6 +24,7 @@ public class RestaurantDetail extends AppCompatActivity {
     private DBHelper mDbHelper;
     static MyAdapter adapter;
     ArrayList<MyItem> data = new ArrayList<MyItem>();
+    final String TAG = "location";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,8 @@ public class RestaurantDetail extends AppCompatActivity {
     protected void getContributes(){
         Log.i("asd","contributes1");
         mDbHelper = new DBHelper(this);
+
+
         Cursor cursor_restaurant = mDbHelper.getAllRestaurantsByMethod();
         int i= cursor_restaurant.getCount();
 
@@ -98,8 +101,27 @@ public class RestaurantDetail extends AppCompatActivity {
     public void getContributes2(){
         Cursor cursor_restaurant = mDbHelper.getAllRestaurantsByMethod();
         Cursor cursor_menu = mDbHelper.getAllMenusByMethod();
-        int ID = cursor_restaurant.getCount();
+        int ID=0;
 
+        Intent intent = getIntent();
+
+        if(intent.getStringExtra("Restaurant Loacation")!=""){
+            String add = (intent.getStringExtra("Restaurant Loacation"));
+
+            while (cursor_restaurant.moveToNext()){
+                ID++;
+                Log.i(TAG,ID+"");
+                if(cursor_restaurant.getString(2).equals(add)){
+                    return;
+                }
+            }
+        }
+
+        else{
+            ID = cursor_restaurant.getCount();
+        }
+
+        //
         while(cursor_menu.moveToNext()){
             if(cursor_menu.getInt(1)==ID){
                 String menu_name = cursor_menu.getString(2);

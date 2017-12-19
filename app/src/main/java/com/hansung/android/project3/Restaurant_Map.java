@@ -5,6 +5,7 @@ package com.hansung.android.project3;
         import android.content.DialogInterface;
         import android.content.Intent;
         import android.content.pm.PackageManager;
+        import android.database.Cursor;
         import android.location.Address;
         import android.location.Geocoder;
         import android.location.Location;
@@ -27,6 +28,7 @@ package com.hansung.android.project3;
         import com.google.android.gms.maps.GoogleMap;
         import com.google.android.gms.maps.OnMapReadyCallback;
         import com.google.android.gms.maps.SupportMapFragment;
+        import com.google.android.gms.maps.model.BitmapDescriptorFactory;
         import com.google.android.gms.maps.model.LatLng;
         import com.google.android.gms.maps.model.Marker;
         import com.google.android.gms.maps.model.MarkerOptions;
@@ -49,6 +51,7 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
     Button button;
     EditText editText;
     TextView textView;
+    private DBHelper mDHelper;
 
 
     @Override
@@ -91,14 +94,8 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
                             @Override
                             public boolean onMarkerClick(Marker marker) {
 
-
-
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(
                                         Restaurant_Map.this);
-
-
-
-
                                 // 제목셋팅
                                 dialog.setTitle("맛집 등록");
 
@@ -113,7 +110,6 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
                                                         Intent intent = new Intent(getApplicationContext(),Registration_Restaurant.class);
                                                         intent.putExtra("Restaurant Loacation", editText.getText().toString());
                                                         startActivity(intent);
-
                                                     }
                                                 })
                                         .setNegativeButton("아니오",
@@ -124,19 +120,12 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
                                                         dialog.cancel();
                                                     }
                                                 });
-
                                 AlertDialog alert11 = dialog.create();
                                 alert11.show();
-
                                 Log.i(TAG,"markerClicke operate");
-
-
-
                                 return false;
                             }
                         });
-
-
                     }
                 } catch (IOException e) {
                     Log.e(getClass().toString(),"Failed in using Geocoder.", e);
@@ -145,23 +134,22 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
             }
         });
 
-
-
-
-
     }
+
+
+
+    private boolean checkLocationPermissions() {
+        int permissionState = ActivityCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.map_menu,menu);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    private boolean checkLocationPermissions() {
-        int permissionState = ActivityCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override
@@ -191,8 +179,6 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
 
     }
 
-
-
     private void requestLocationPermissions(int requestCode) {
         ActivityCompat.requestPermissions(
                 Restaurant_Map.this,            // MainActivity 액티비티의 객체 인스턴스를 나타냄
@@ -219,8 +205,6 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
                         Log.i(TAG,"Good");
                     }
 
-
-
                 }
                 if (location != null) {
                     Log.i(TAG,"loaction is not null");
@@ -243,8 +227,49 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
        mGoogleMap=googleMap;
         Log.i(TAG,"onMapReady operate");
 
+        mDHelper = new DBHelper(getApplicationContext());
+        Cursor cursor_restaurant = mDHelper.getAllRestaurantsByMethod();
+
+        while(cursor_restaurant.moveToNext()){
+            final String restaurant_add= cursor_restaurant.getString(2);
+
+            if(restaurant_add!=null){
+
+                try {
+                    Log.i(TAG,restaurant_add);
+                    Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.KOREA);
+                    List<Address> addresses = geocoder.getFromLocationName(restaurant_add,1);
+                    if (addresses.size() >0) {
+                        Address bestResult = (Address) addresses.get(0);
+
+
+                        LatLng local3 = new LatLng(bestResult.getLatitude(), bestResult.getLongitude());
+                        Log.i(TAG,bestResult.getLatitude()+""+bestResult.getLongitude());
+                        if(local3==null){
+                            Log.i(TAG,"aaaqaaaa");
+                        }
+
+                        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(bestResult.getLatitude(), bestResult.getLongitude())).
+                                icon(BitmapDescriptorFactory.fromResource(R.drawable.local)));
+                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(local3));
+                        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker) {
+
+                            Intent intent = new Intent(getApplicationContext(),RestaurantDetail.class);
+                            intent.putExtra("Restaurant ADD", restaurant_add);
+                            startActivity(intent);
+                            Log.i(TAG,"markerClicke operate");
+                                return false;
+                            }
+                        });
+
+                    }
+                } catch (IOException e) {
+                    Log.e(getClass().toString(),"Failed in using Geocoder.", e);
+                    return;
+                }
+            }
+        }
     }
-
-
-
 }

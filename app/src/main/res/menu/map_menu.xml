@@ -27,7 +27,6 @@
 
     </item>
 
-
     <item
         android:id="@+id/threekm"
         android:title="3km"
@@ -35,6 +34,5 @@
 
     </item>
     </group>
-
 
 </menu>
