@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hansung.android.project3.Restaurant_Map"
+
     android:orientation="vertical">
 
     <LinearLayout
@@ -12,13 +12,13 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/edit_text"
+            android:id="@+id/edit_text_local"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button_local"
             android:text="FIND"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -27,7 +27,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/result"
+        android:id="@+id/result_local"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

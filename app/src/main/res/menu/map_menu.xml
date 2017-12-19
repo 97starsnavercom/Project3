@@ -15,6 +15,7 @@
     <item
         android:id="@+id/onekm"
         android:title="1km"
+        android:checked="true"
         app:showAsAction="never">
 
         </item>

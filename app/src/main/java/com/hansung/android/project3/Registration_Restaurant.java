@@ -34,12 +34,25 @@ public class Registration_Restaurant extends AppCompatActivity {
     private String mPhotoFileName = null;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private DBHelper mDbHelper;
-
+    EditText editText1;
+    EditText editText2;
+    EditText editText3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_restaurant);
         checkDangerousPermissions();
+        editText1 = (EditText)findViewById(R.id.name);
+        editText2 = (EditText)findViewById(R.id.add);
+        editText3 = (EditText)findViewById(R.id.tel);
+
+        Intent intent = getIntent();
+
+        if(intent.getStringExtra("Restaurant Loacation")!=""){
+            editText2.setText(intent.getStringExtra("Restaurant Loacation"));
+        }
+
+
 
     }
 
@@ -81,9 +94,7 @@ public class Registration_Restaurant extends AppCompatActivity {
     //맛집등록 버튼 클릭시 DB에 정보 저장후 RestaurantDetail엑티비티로 전환
     public void registration_restaurant(View view){
         mDbHelper = new DBHelper(this);
-        EditText editText1 = (EditText)findViewById(R.id.name);
-        EditText editText2 = (EditText)findViewById(R.id.add);
-        EditText editText3 = (EditText)findViewById(R.id.tel);
+
         String photo =mPhotoFile.getAbsolutePath().toString();
 
         String name = editText1.getText().toString();
