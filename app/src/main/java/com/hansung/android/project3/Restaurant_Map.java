@@ -1,43 +1,45 @@
 package com.hansung.android.project3;
 
-        import android.Manifest;
-        import android.content.Context;
-        import android.content.DialogInterface;
-        import android.content.Intent;
-        import android.content.pm.PackageManager;
-        import android.database.Cursor;
-        import android.location.Address;
-        import android.location.Geocoder;
-        import android.location.Location;
-        import android.support.v4.app.ActivityCompat;
-        import android.support.v7.app.AlertDialog;
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-        import android.util.Log;
-        import android.view.Menu;
-        import android.view.MenuInflater;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.TextView;
+import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
-        import com.google.android.gms.location.FusedLocationProviderClient;
-        import com.google.android.gms.location.LocationServices;
-        import com.google.android.gms.maps.CameraUpdateFactory;
-        import com.google.android.gms.maps.GoogleMap;
-        import com.google.android.gms.maps.OnMapReadyCallback;
-        import com.google.android.gms.maps.SupportMapFragment;
-        import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-        import com.google.android.gms.maps.model.LatLng;
-        import com.google.android.gms.maps.model.Marker;
-        import com.google.android.gms.maps.model.MarkerOptions;
-        import com.google.android.gms.tasks.OnSuccessListener;
-        import com.google.android.gms.tasks.Task;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
-        import java.io.IOException;
-        import java.util.List;
-        import java.util.Locale;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCallback {
 
@@ -53,7 +55,6 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
     TextView textView;
     private DBHelper mDHelper;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -66,7 +67,6 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
         if (!checkLocationPermissions()) {
             requestLocationPermissions(REQUEST_PERMISSIONS_FOR_LAST_KNOWN_LOCATION);
@@ -93,15 +93,12 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
                         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                             @Override
                             public boolean onMarkerClick(Marker marker) {
-
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(
                                         Restaurant_Map.this);
-                                // 제목셋팅
+
                                 dialog.setTitle("맛집 등록");
 
-                                // AlertDialog 셋팅
-                                dialog
-                                        .setMessage("새로운 맛집으로 등록하시겠습니까?")
+                                dialog.setMessage("새로운 맛집으로 등록하시겠습니까?")
                                         .setCancelable(false)
                                         .setPositiveButton("예",
                                                 new DialogInterface.OnClickListener() {
@@ -116,7 +113,6 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
                                                 new DialogInterface.OnClickListener() {
                                                     public void onClick(
                                                             DialogInterface dialog, int id) {
-                                                        // 다이얼로그를 취소한다
                                                         dialog.cancel();
                                                     }
                                                 });
@@ -133,17 +129,13 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
                 }
             }
         });
-
     }
-
-
 
     private boolean checkLocationPermissions() {
         int permissionState = ActivityCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -176,7 +168,6 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     private void requestLocationPermissions(int requestCode) {
@@ -189,7 +180,6 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
     @SuppressWarnings("MissingPermission")
     private void getLastLocation() {
         Log.i(TAG,"getLastLocation operate");
-
         Task task = mFusedLocationClient.getLastLocation();       // Task<Location> 객체 반환
         task.addOnSuccessListener(this, new OnSuccessListener<Location>() {
             @Override
@@ -224,12 +214,11 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
     }
 
     public void onMapReady(GoogleMap googleMap) {
-       mGoogleMap=googleMap;
+        mGoogleMap=googleMap;
         Log.i(TAG,"onMapReady operate");
 
         mDHelper = new DBHelper(getApplicationContext());
         Cursor cursor_restaurant = mDHelper.getAllRestaurantsByMethod();
-
         while(cursor_restaurant.moveToNext()){
             final String restaurant_add= cursor_restaurant.getString(2);
 
@@ -242,24 +231,31 @@ public class Restaurant_Map extends AppCompatActivity  implements OnMapReadyCall
                     if (addresses.size() >0) {
                         Address bestResult = (Address) addresses.get(0);
 
-
                         LatLng local3 = new LatLng(bestResult.getLatitude(), bestResult.getLongitude());
                         Log.i(TAG,bestResult.getLatitude()+""+bestResult.getLongitude());
                         if(local3==null){
                             Log.i(TAG,"aaaqaaaa");
                         }
 
-                        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(bestResult.getLatitude(), bestResult.getLongitude())).
-                                icon(BitmapDescriptorFactory.fromResource(R.drawable.local)));
+                        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.local);
+                        Bitmap b=bitmapdraw.getBitmap();
+                        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100 , 100, false);
+
+
+                        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(bestResult.getLatitude(), bestResult.getLongitude()))
+                                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+
+//                        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(bestResult.getLatitude(), bestResult.getLongitude()))
+//                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.local)));
                         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(local3));
                         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                             @Override
                             public boolean onMarkerClick(Marker marker) {
 
-                            Intent intent = new Intent(getApplicationContext(),RestaurantDetail.class);
-                            intent.putExtra("Restaurant ADD", restaurant_add);
-                            startActivity(intent);
-                            Log.i(TAG,"markerClicke operate");
+                                Intent intent = new Intent(getApplicationContext(),RestaurantDetail.class);
+                                intent.putExtra("Restaurant ADD", restaurant_add);
+                                startActivity(intent);
+                                Log.i(TAG,"markerClicke operate");
                                 return false;
                             }
                         });

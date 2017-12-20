@@ -26,11 +26,14 @@ public class Registration_Menu extends AppCompatActivity {
     private String mPhotoFileName = null;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private DBHelper mDbHelper;
+    final String TAG="location";
+    int ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration__menu);
+        getID();
     }
 
     //메뉴사진을 찍기 위한 메소드
@@ -78,16 +81,14 @@ public class Registration_Menu extends AppCompatActivity {
         EditText editText2 = (EditText)findViewById(R.id.Menu_Price);
         EditText editText3 = (EditText)findViewById(R.id.Menu_Detail);
 
-        Cursor c = mDbHelper.getAllRestaurantsByMethod();
-        int Restaurant_id = c.getCount();
-        Log.i("asd",""+Restaurant_id);
+        Log.i(TAG,"Menu regi: "+ID);
 
         String name = editText1.getText().toString();
         String price = editText2.getText().toString();
         String detail = editText3.getText().toString();
         String photo =mPhotoFile.getAbsolutePath().toString();
 
-        long nOfRows = mDbHelper.insertMenuByMethod(Restaurant_id,name,price, detail,photo);
+        long nOfRows = mDbHelper.insertMenuByMethod(ID,name,price, detail,photo);
         if (nOfRows >0)
             Toast.makeText(this,nOfRows+" Record Inserted", Toast.LENGTH_SHORT).show();
         else
@@ -103,6 +104,22 @@ public class Registration_Menu extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
         String  currentTimeStamp = dateFormat.format(new Date());
         return currentTimeStamp;
+    }
+
+    public void getID(){
+
+        Cursor cursor_restaurant = mDbHelper.getAllRestaurantsByMethod();
+        Cursor cursor_menu = mDbHelper.getAllMenusByMethod();
+
+        Intent intent = getIntent();
+        if(intent.getIntExtra("Restaurant ID",0)>=0){
+            ID=intent.getIntExtra("Restaurant ID",0);
+            Log.i(TAG,"Menu"+ID);
+        }
+        else{
+            Log.i(TAG,"Error ID !!!!!!!!!!!!!!!!!! in Registration_Menu");
+        }
+
     }
 
 }

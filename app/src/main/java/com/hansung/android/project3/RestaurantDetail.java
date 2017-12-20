@@ -25,11 +25,13 @@ public class RestaurantDetail extends AppCompatActivity {
     static MyAdapter adapter;
     ArrayList<MyItem> data = new ArrayList<MyItem>();
     final String TAG = "location";
+    int ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_detail);
+        getID();
         //시작시 DB 부터 얻은 정보로 Restaurant정보 설정
         getContributes();
     }
@@ -48,8 +50,11 @@ public class RestaurantDetail extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.add_menu:
-                //Registration_Menu액티비티 실행
-                startActivityForResult(new Intent(this,Registration_Menu.class),1);
+                //Registration_Menu액티비티
+
+                Intent intent = new Intent(this,Registration_Menu.class);
+                intent.putExtra("Restaurant ID",ID);
+                startActivityForResult(intent,1);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -76,12 +81,10 @@ public class RestaurantDetail extends AppCompatActivity {
         Log.i("asd","contributes1");
         mDbHelper = new DBHelper(this);
 
-
         Cursor cursor_restaurant = mDbHelper.getAllRestaurantsByMethod();
-        int i= cursor_restaurant.getCount();
 
         while(cursor_restaurant.moveToNext()){
-            if(cursor_restaurant.getInt(0)==i){
+            if(cursor_restaurant.getInt(0)==ID){
                 TextView textView1 = (TextView) findViewById(R.id.restaurant_name);
                 TextView textView2 = (TextView) findViewById(R.id.restaurant_add);
                 TextView textView3 = (TextView) findViewById(R.id.restaurant_tel);
@@ -101,25 +104,7 @@ public class RestaurantDetail extends AppCompatActivity {
     public void getContributes2(){
         Cursor cursor_restaurant = mDbHelper.getAllRestaurantsByMethod();
         Cursor cursor_menu = mDbHelper.getAllMenusByMethod();
-        int ID=0;
 
-        Intent intent = getIntent();
-
-        if(intent.getStringExtra("Restaurant Loacation")!=""){
-            String add = (intent.getStringExtra("Restaurant Loacation"));
-
-            while (cursor_restaurant.moveToNext()){
-                ID++;
-                Log.i(TAG,ID+"");
-                if(cursor_restaurant.getString(2).equals(add)){
-                    return;
-                }
-            }
-        }
-
-        else{
-            ID = cursor_restaurant.getCount();
-        }
 
         //
         while(cursor_menu.moveToNext()){
@@ -160,7 +145,43 @@ public class RestaurantDetail extends AppCompatActivity {
     }
 
     //통화실행코드
+//    public void callnumber(View view){
+//        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:02-760-4499")));
+//    }
+
     public void callnumber(View view){
-        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:02-760-4499")));
+        Cursor cursor_restaurant = mDbHelper.getAllRestaurantsByMethod();
+
+        cursor_restaurant.moveToPosition(ID);
+        String cell = cursor_restaurant.getString(3);
+        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(cell)));
     }
+
+    public void getID(){
+
+        Cursor cursor_restaurant = mDbHelper.getAllRestaurantsByMethod();
+        Cursor cursor_menu = mDbHelper.getAllMenusByMethod();
+        Intent intent = getIntent();
+        if(intent.getStringExtra("Restaurant Loacation")!=""){
+            String add = (intent.getStringExtra("Restaurant Loacation"));
+            Log.i(TAG,add);
+
+            while (cursor_restaurant.moveToNext()){
+                ID++;
+                Log.i(TAG,ID+"");
+                if(cursor_restaurant.getString(2).equals(add)){
+                    break;
+                }
+            }
+            Log.i(TAG,"Restaurant intent ID"+ID);
+        }
+
+        else{
+            ID = cursor_restaurant.getCount();
+            Log.i(TAG,"Restaurant Last ID"+ID);
+
+        }
+
+    }
+
 }
